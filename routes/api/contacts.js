@@ -1,19 +1,10 @@
 const express = require("express");
-const Joi = require("joi");
 
 const contacts = require("../../models/contacts");
 
-const { createError } = require("../../helpers");
+const { createError, contactSchema } = require("../../helpers");
 
 const router = express.Router();
-
-const contactSchema = Joi.object({
-  name: Joi.string().max(30).required(),
-  email: Joi.string().email().required(),
-  phone: Joi.string()
-    .pattern(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s/0-9]*$/)
-    .required(),
-});
 
 router.get("/", async (req, res, next) => {
   try {
@@ -21,9 +12,6 @@ router.get("/", async (req, res, next) => {
     res.json(result);
   } catch (error) {
     next(error);
-    // res.status(500).json({
-    //   message: "Server error",
-    // });
   }
 });
 
@@ -33,17 +21,10 @@ router.get("/:contactId", async (req, res, next) => {
     const result = await contacts.getContactById(contactId);
     if (!result) {
       throw createError(404);
-      // res.status(404).json({
-      //   message: "Not found",
-      // });
-      // return;
     }
     res.json(result);
   } catch (error) {
     next(error);
-    // res.status(500).json({
-    //   message: "Server error",
-    // });
   }
 });
 
