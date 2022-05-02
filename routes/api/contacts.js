@@ -1,120 +1,31 @@
 const express = require("express");
-const mongoose = require("mongoose");
 
-const { Contact, schemas } = require("../../models/contact");
+const ctrl = require("../../controllers/contacts");
+const { ctrlWrapper } = require("../../helpers");
 
-const { createError } = require("../../helpers");
+const { validation } = require("../../middlewares");
+const { schemas } = require("../../models/contact");
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  try {
-    const result = await Contact.find({}, "-createdAt -updatedAt");
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/", ctrlWrapper(ctrl.getAll));
 
-router.get("/:contactId", async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
-    const isValid = mongoose.isValidObjectId(contactId);
-    if (!isValid) {
-      throw createError(404);
-    }
-    const result = await Contact.findById(contactId, "-createdAt -updatedAt");
-    if (!result) {
-      throw createError(404);
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/:contactId", ctrlWrapper(ctrl.getById));
 
-router.post("/", async (req, res, next) => {
-  try {
-    const { error } = schemas.add.validate(req.body);
-    if (error) {
-      throw createError(400, error.message);
-    }
-    const result = await Contact.create(req.body);
-    res.status(201).json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+router.post("/", validation(schemas.add), ctrlWrapper(ctrl.add));
 
-router.put("/:contactId", async (req, res, next) => {
-  try {
-    const { error } = schemas.add.validate(req.body);
-    if (error) {
-      throw createError(400, error.message);
-    }
-    const { contactId } = req.params;
+router.put(
+  "/:contactId",
+  validation(schemas.add),
+  ctrlWrapper(ctrl.updateById),
+);
 
-    const isValid = mongoose.isValidObjectId(contactId);
-    if (!isValid) {
-      throw createError(404);
-    }
+router.patch(
+  "/:contactId/favorite",
+  validation(schemas.updateFavorite),
+  ctrlWrapper(ctrl.updateFavorite),
+);
 
-    const result = await Contact.findByIdAndUpdate(contactId, req.body, {
-      new: true,
-    });
-
-    if (!result) {
-      throw createError(404);
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.patch("/:contactId", async (req, res, next) => {
-  try {
-    const { error } = schemas.updateFavorite.validate(req.body);
-    if (error) {
-      throw createError(400, error.message);
-    }
-    const { contactId } = req.params;
-
-    const isValid = mongoose.isValidObjectId(contactId);
-    if (!isValid) {
-      throw createError(404);
-    }
-
-    const result = await Contact.findByIdAndUpdate(contactId, req.body, {
-      new: true,
-    });
-
-    if (!result) {
-      throw createError(404);
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.delete("/:contactId", async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
-
-    const isValid = mongoose.isValidObjectId(contactId);
-    if (!isValid) {
-      throw createError(404);
-    }
-
-    const result = await Contact.findByIdAndRemove(contactId);
-    if (!result) {
-      throw createError(404);
-    }
-    res.json({ message: "contact deleted" });
-  } catch (error) {
-    next(error);
-  }
-});
+router.delete("/:contactId", ctrlWrapper(ctrl.removeById));
 
 module.exports = router;
