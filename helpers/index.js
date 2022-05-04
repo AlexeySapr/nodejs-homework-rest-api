@@ -1,7 +1,7 @@
 const createError = require("./createError");
-const contactSchema = require("./joiSchemas");
+const ctrlWrapper = require("./ctrlWrapper");
 
 module.exports = {
   createError,
-  contactSchema,
+  ctrlWrapper,
 };
