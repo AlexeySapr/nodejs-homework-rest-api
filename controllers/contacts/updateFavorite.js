@@ -6,7 +6,6 @@ const updateFavorite = async (req, res, next) => {
   const { contactId } = req.params;
 
   const isValid = mongoose.isValidObjectId(contactId);
-  console.log("isValid: ", isValid);
   if (!isValid) {
     throw createError(404);
   }
