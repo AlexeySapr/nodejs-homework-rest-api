@@ -6,13 +6,15 @@ const { ctrlWrapper } = require("../../helpers");
 const { validation } = require("../../middlewares");
 const { schemas } = require("../../models/contact");
 
+const { authCheck } = require("../../middlewares");
+
 const router = express.Router();
 
 router.get("/", ctrlWrapper(ctrl.getAll));
 
 router.get("/:contactId", ctrlWrapper(ctrl.getById));
 
-router.post("/", validation(schemas.add), ctrlWrapper(ctrl.add));
+router.post("/", validation(schemas.add), authCheck, ctrlWrapper(ctrl.add));
 
 router.put(
   "/:contactId",
