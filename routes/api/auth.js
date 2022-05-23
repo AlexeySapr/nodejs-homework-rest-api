@@ -1,10 +1,13 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const { User, schemas } = require("../../models/user");
 const { createError } = require("../../helpers");
 
 const router = express.Router();
+
+const { SECRET_KEY } = process.env;
 
 router.post("/signup", async (req, res, next) => {
   try {
@@ -54,7 +57,11 @@ router.post("/login", async (req, res, next) => {
       throw createError(401, "Email or password is wrong");
     }
 
-    const token = "sdfsfa.asaera.sdtygcfg";
+    const payload = {
+      id: user._id,
+    };
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
+
     const { subscription } = user;
 
     res.json({
