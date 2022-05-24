@@ -14,11 +14,12 @@ router.post("/login", validation(schemas.login), ctrlWrapper(ctrl.login));
 
 router.get("/current", authCheck, ctrlWrapper(ctrl.currentUser));
 
-// router.patch("/users", authCheck, async (req, res, next) => {
-//   const { _id } = req.user;
-//   const { subscription } = req.query;
-//   await User.findByIdAndUpdate(_id, { subscription });
-// });
+router.patch(
+  "/",
+  authCheck,
+  validation(schemas.subscription),
+  ctrlWrapper(ctrl.subscriptionUpdate),
+);
 
 router.get("/logout", authCheck, ctrlWrapper(ctrl.logout));
 
