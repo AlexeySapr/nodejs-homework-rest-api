@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { schemas } = require("../../models/user");
+const { schemas } = require("../../models/User");
 const { ctrlWrapper } = require("../../helpers");
 const { authCheck, validation } = require("../../middlewares");
 

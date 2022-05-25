@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Contact } = require("../../models/contact");
+const { Contact } = require("../../models/Contact");
 const { createError } = require("../../helpers");
 
 const removeById = async (req, res, next) => {
