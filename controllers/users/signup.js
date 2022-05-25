@@ -17,7 +17,7 @@ const signup = async (req, res, next) => {
   const verificationToken = nanoid();
 
   const mail = {
-    to: email, // Change to your recipient
+    to: email,
     subject: "Confirm your registration email address",
     text: "To confirm your registration email address",
     html: `<a 
