@@ -3,7 +3,7 @@ const { User } = require("../../models/User");
 
 const sendEmailForVerify = async (req, res, next) => {
   const { email } = req.body;
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email });
   if (!user) {
     throw createError(401);
   }
@@ -14,12 +14,9 @@ const sendEmailForVerify = async (req, res, next) => {
   const mail = {
     to: email,
     subject: "Confirm your registration email address",
-    text: "To confirm your registration email address",
-    html: `<a 
-      target="_blank"
-      href="localhost:3000/api/users/verify/${user.verificationToken}">
-      please follow the link
-      </a>`,
+    html: `<h3>To confirm your registration email address, please follow the 
+    <a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationToken}">link</a>
+    </h3>`,
   };
 
   await sendMail(mail);

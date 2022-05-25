@@ -19,12 +19,9 @@ const signup = async (req, res, next) => {
   const mail = {
     to: email,
     subject: "Confirm your registration email address",
-    text: "To confirm your registration email address",
-    html: `<a 
-      target="_blank"
-      href="localhost:3000/api/users/verify/${verificationToken}">
-      please follow the link
-      </a>`,
+    html: `<h3>To confirm your registration email address, please follow the 
+    <a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">link</a>
+    </h3>`,
   };
 
   await sendMail(mail);
