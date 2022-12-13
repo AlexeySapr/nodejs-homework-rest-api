@@ -1,4 +1,4 @@
-const { User } = require("../../models/user");
+const { User } = require("../../models/User");
 const { createError } = require("../../helpers");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -10,6 +10,10 @@ const login = async (req, res, next) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw createError(401, "Email or password is wrong");
+  }
+
+  if (!user.verify) {
+    throw createError(401, "Email not verify");
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);

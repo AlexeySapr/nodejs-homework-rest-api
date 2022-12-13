@@ -1,4 +1,4 @@
-const { User } = require("../../models/user");
+const { User } = require("../../models/User");
 
 const subscriptionUpdate = async (req, res, next) => {
   const { _id } = req.user;
